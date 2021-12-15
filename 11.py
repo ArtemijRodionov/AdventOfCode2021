@@ -1,6 +1,9 @@
 import fileinput
 import sys
 import time
+import os
+
+DEBUG = bool(os.environ.get('DEBUG', False))
 
 dij = [(i, j) for i in range(-1, 2) for j in range(-1, 2)]
 
@@ -32,7 +35,10 @@ colors = {
 color = lambda x: "\33[48;2;" + str(colors[x]) + "m" + str(x) + "\33[0m"
 
 def print_grid(grid):
+    if not DEBUG: 
+        return
     time.sleep(0.02)
+    os.system('clear')
     print('\n'.join(
         [''.join([color(x) for x in row])
         for row in grid]
@@ -57,7 +63,7 @@ def step(grid):
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             flash(grid, flashed, to_flash, i, j)
-            #print_grid(grid)
+            print_grid(grid)
 
     while to_flash:
        i, j = ij = to_flash.pop()
@@ -67,7 +73,7 @@ def step(grid):
            if not is_ok or ij1 == ij or ij1 in flashed:
                continue
            flash(grid, flashed, to_flash, i1, j1)
-           #print_grid(grid)
+           print_grid(grid)
     return len(flashed)
 
 
